@@ -1,0 +1,45 @@
+# Netlify configuration.
+#
+# Prepared, not connected. Nothing here takes effect until someone links this
+# repository to a Netlify site — see README.md → Deploying.
+#
+# The base path stays "/" for Netlify and Vercel: both serve from a domain root,
+# so `VITE_BASE_PATH` is left at its default and no override is needed. Only the
+# GitHub Pages project-path deploy needs the prefix.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # package.json requires >= 20.19.0; 22 is the current LTS.
+  NODE_VERSION = "22"
+
+# SPA fallback. Netlify checks the filesystem before applying redirects, so this
+# catch-all only fires for paths that are not real files — which is exactly the
+# set of client-side routes. Status 200, not 302: the URL must stay as the
+# visitor typed it so React Router can read it.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Hashed filenames, so they can be cached forever.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# The entry document must never be cached hard, or a visitor keeps loading an old
+# index.html that points at asset hashes which no longer exist.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"

@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+dist-ssr/
+build/
+
+# Caches
+.vite/
+.eslintcache
+*.tsbuildinfo
+.cache/
+
+# Local env files (this project needs NO secrets — see README)
+.env
+.env.local
+.env.*.local
+
+# Local tool state (never commit machine-local permissions/settings)
+.claude/settings.local.json
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log

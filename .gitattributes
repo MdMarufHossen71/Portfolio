@@ -1,2 +1,25 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Text files are stored as LF and, importantly, checked out as LF on every
+# platform — `eol=lf`, not bare `text=auto`.
+#
+# Prettier is configured with `"endOfLine": "lf"`. With plain `text=auto` on a
+# machine where `core.autocrlf=true` (the Git for Windows default), a fresh clone
+# lands CRLF in the working tree and `npm run format:check` then fails on files
+# nobody has touched. Pinning the checkout keeps the working tree, the repository
+# and Prettier in agreement.
+* text=auto eol=lf
+
+# Binary assets: never transform these.
+*.woff2 binary
+*.woff binary
+*.ttf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# SVG is XML, so it is text — listed only to make that explicit, since the two
+# SVGs in `public/` are hand-edited source, not exported binaries.
+*.svg text

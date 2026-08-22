@@ -1,0 +1,183 @@
+/**
+ * Stylesheet entry point.
+ *
+ * Order matters: Tailwind first (it declares the @layer order), then our token
+ * definitions, then base/reset, then the 3D component layer.
+ */
+@import 'tailwindcss';
+@import './tokens.css';
+@import './base.css';
+@import './effects.css';
+
+/* Theme is class/attribute driven, not OS driven, because we ship a toggle.
+   This rewires every `dark:` utility to look at [data-theme] on <html>. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* Alias the runtime tokens into Tailwind's theme so utilities such as
+   `bg-bg`, `text-muted`, `border-line` and `font-display` resolve to the live
+   custom properties and therefore re-tint on theme change.
+   `inline` matters: it emits var(--c-bg) at the use site instead of adding
+   another layer of indirection. */
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-bg-deep: var(--c-bg-deep);
+  --color-surface: var(--c-surface);
+  --color-raised: var(--c-raised);
+  --color-glass: var(--c-glass-1);
+  --color-line: var(--c-line);
+  --color-line-strong: var(--c-line-strong);
+
+  --color-ink: var(--c-text);
+  --color-muted: var(--c-text-muted);
+  --color-faint: var(--c-text-faint);
+
+  --color-accent: var(--c-accent);
+  --color-accent-2: var(--c-accent-2);
+  --color-accent-3: var(--c-accent-3);
+  --color-on-accent: var(--c-on-accent);
+
+  --font-display: var(--ff-display);
+  --font-sans: var(--ff-sans);
+  --font-mono: var(--ff-mono);
+
+  --radius-card: var(--r-lg);
+  --radius-pill: var(--r-pill);
+}
+
+@layer components {
+  /* ═══ Long-form article typography ═══════════════════════════
+     Scoped to rendered markdown so it cannot leak into UI chrome. */
+  .prose {
+    color: var(--c-text-muted);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .prose > * + * {
+    margin-top: 1.15em;
+  }
+
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    color: var(--c-text);
+    margin-top: 2.25em;
+    margin-bottom: 0.6em;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+  }
+
+  .prose h3 {
+    font-size: 1.1875rem;
+  }
+
+  .prose h4 {
+    font-size: 1.0625rem;
+  }
+
+  .prose strong {
+    color: var(--c-text);
+    font-weight: 600;
+  }
+
+  .prose a {
+    color: var(--c-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  .prose a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 1.35rem;
+  }
+
+  .prose ul {
+    list-style: disc;
+  }
+
+  .prose ol {
+    list-style: decimal;
+  }
+
+  .prose li + li {
+    margin-top: 0.4em;
+  }
+
+  .prose li::marker {
+    color: var(--c-accent);
+  }
+
+  .prose blockquote {
+    border-left: 2px solid var(--c-accent);
+    padding-left: 1.1rem;
+    color: var(--c-text);
+    font-style: italic;
+  }
+
+  .prose code {
+    background: var(--c-glass-2);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-xs);
+    padding: 0.12em 0.4em;
+    color: var(--c-accent);
+    font-size: 0.875em;
+  }
+
+  .prose pre {
+    background: var(--c-bg-deep);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-md);
+    padding: 1.1rem 1.25rem;
+    overflow-x: auto;
+    box-shadow: var(--sh-2);
+  }
+
+  /* Inline-code styling must not double up inside a code block. */
+  .prose pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--c-text);
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  .prose hr {
+    border: none;
+    border-top: 1px solid var(--c-line);
+    margin-block: 2.5em;
+  }
+
+  .prose img {
+    border-radius: var(--r-md);
+    border: 1px solid var(--c-line);
+  }
+
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .prose th,
+  .prose td {
+    border: 1px solid var(--c-line);
+    padding: 0.55rem 0.8rem;
+    text-align: left;
+  }
+
+  .prose th {
+    color: var(--c-text);
+    background: var(--c-glass-1);
+    font-weight: 600;
+  }
+}
