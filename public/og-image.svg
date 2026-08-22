@@ -1,0 +1,187 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="1200"
+  height="630"
+  viewBox="0 0 1200 630"
+  role="img"
+  aria-label="Md Maruf Hossen — Digital Marketer, Graphic Designer and Web Builder"
+>
+  <title>Md Maruf Hossen — Digital Marketer, Graphic Designer &amp; Web Builder</title>
+
+  <!--
+    Social share card, 1200×630.
+
+    Hand-authored SVG rather than a screenshot so it stays a few kilobytes and can
+    be edited as text. Fonts are a generic system stack on purpose: an SVG served
+    to a third-party rasteriser cannot rely on a webfont being fetched, and a
+    missing font would silently fall back anyway.
+
+    KNOWN LIMITATION — see CONTENT_TODO.md. Facebook, X/Twitter and LinkedIn do
+    not render SVG previews; they need a PNG or JPEG. Export this at 1200×630 as
+    og-image.png and point `ogImage` in src/config/site.config.json at it. Until
+    then, unfurled links will show no image on those platforms.
+  -->
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#080c18" />
+      <stop offset="55%" stop-color="#05070e" />
+      <stop offset="100%" stop-color="#0a0713" />
+    </linearGradient>
+
+    <radialGradient id="haloCyan" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#38e1ff" stop-opacity="0.42" />
+      <stop offset="100%" stop-color="#38e1ff" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="haloViolet" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#a97bff" stop-opacity="0.36" />
+      <stop offset="100%" stop-color="#a97bff" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#38e1ff" />
+      <stop offset="60%" stop-color="#a97bff" />
+      <stop offset="100%" stop-color="#a97bff" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38e1ff" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#a97bff" stop-opacity="0.22" />
+    </linearGradient>
+
+    <!-- Floor grid, faded out towards the horizon so it reads as depth. -->
+    <linearGradient id="gridFade" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+    <mask id="gridMask">
+      <rect x="0" y="330" width="1200" height="300" fill="url(#gridFade)" />
+    </mask>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)" />
+
+  <ellipse cx="215" cy="120" rx="520" ry="360" fill="url(#haloCyan)" />
+  <ellipse cx="1040" cy="560" rx="520" ry="360" fill="url(#haloViolet)" />
+
+  <g mask="url(#gridMask)" stroke="#8fa3c8" stroke-width="1" opacity="0.55">
+    <!-- Horizontals: spacing widens downwards, the cheap trick that sells depth. -->
+    <line x1="0" y1="345" x2="1200" y2="345" />
+    <line x1="0" y1="366" x2="1200" y2="366" />
+    <line x1="0" y1="394" x2="1200" y2="394" />
+    <line x1="0" y1="431" x2="1200" y2="431" />
+    <line x1="0" y1="479" x2="1200" y2="479" />
+    <line x1="0" y1="541" x2="1200" y2="541" />
+    <line x1="0" y1="620" x2="1200" y2="620" />
+    <!-- Verticals converging on a vanishing point at (600, 330). -->
+    <line x1="600" y1="330" x2="-560" y2="630" />
+    <line x1="600" y1="330" x2="-180" y2="630" />
+    <line x1="600" y1="330" x2="140" y2="630" />
+    <line x1="600" y1="330" x2="400" y2="630" />
+    <line x1="600" y1="330" x2="600" y2="630" />
+    <line x1="600" y1="330" x2="800" y2="630" />
+    <line x1="600" y1="330" x2="1060" y2="630" />
+    <line x1="600" y1="330" x2="1380" y2="630" />
+    <line x1="600" y1="330" x2="1760" y2="630" />
+  </g>
+
+  <!-- Monogram tile -->
+  <g>
+    <rect
+      x="88"
+      y="92"
+      width="96"
+      height="96"
+      rx="26"
+      fill="url(#tile)"
+      stroke="#ffffff"
+      stroke-opacity="0.16"
+    />
+    <text
+      x="136"
+      y="140"
+      text-anchor="middle"
+      dominant-baseline="central"
+      font-family="Verdana, Geneva, DejaVu Sans, sans-serif"
+      font-size="40"
+      font-weight="700"
+      letter-spacing="1"
+      fill="#eaf2ff"
+    >
+      MH
+    </text>
+  </g>
+
+  <text
+    x="88"
+    y="266"
+    font-family="Verdana, Geneva, DejaVu Sans, sans-serif"
+    font-size="17"
+    font-weight="600"
+    letter-spacing="4.4"
+    fill="#38e1ff"
+    fill-opacity="0.92"
+  >
+    PORTFOLIO
+  </text>
+
+  <text
+    x="88"
+    y="352"
+    font-family="Verdana, Geneva, DejaVu Sans, sans-serif"
+    font-size="66"
+    font-weight="700"
+    letter-spacing="-1.4"
+    fill="#f2f6ff"
+  >
+    Md Maruf Hossen
+  </text>
+
+  <rect x="88" y="392" width="360" height="3" rx="1.5" fill="url(#rule)" />
+
+  <text
+    x="88"
+    y="446"
+    font-family="Verdana, Geneva, DejaVu Sans, sans-serif"
+    font-size="27"
+    font-weight="400"
+    fill="#aab8d4"
+  >
+    Digital Marketer · Graphic Designer · Web Builder
+  </text>
+
+  <text
+    x="88"
+    y="500"
+    font-family="Verdana, Geneva, DejaVu Sans, sans-serif"
+    font-size="21"
+    font-weight="400"
+    fill="#7c8aa8"
+  >
+    Gazipur, Dhaka, Bangladesh
+  </text>
+
+  <text
+    x="1112"
+    y="556"
+    text-anchor="end"
+    font-family="Courier New, DejaVu Sans Mono, monospace"
+    font-size="21"
+    font-weight="700"
+    fill="#38e1ff"
+    fill-opacity="0.88"
+  >
+    mdmarufhossen.link
+  </text>
+
+  <rect
+    x="0.5"
+    y="0.5"
+    width="1199"
+    height="629"
+    fill="none"
+    stroke="#ffffff"
+    stroke-opacity="0.08"
+  />
+</svg>

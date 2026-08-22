@@ -1,0 +1,128 @@
+/**
+ * Design tokens — the single source of truth for colour, depth, type, motion
+ * and the 3D stage geometry.
+ *
+ * Raw tokens are deliberately namespaced (--c-*, --ff-*, --r-*, --sh-*) so they
+ * never collide with the Tailwind theme keys that alias them in index.css. A
+ * name like `--font-display: var(--font-display)` would self-reference and
+ * silently resolve to nothing.
+ *
+ * Themes swap these values at runtime via [data-theme] on <html>, so every
+ * surface, shadow and glow re-tints from one place.
+ */
+
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* ── Surfaces ─────────────────────────────────────────────── */
+  --c-bg: #05070e;
+  --c-bg-deep: #03040a;
+  --c-surface: #0a0f1c;
+  --c-raised: #101828;
+  --c-glass-1: rgba(255, 255, 255, 0.03);
+  --c-glass-2: rgba(255, 255, 255, 0.055);
+  --c-line: rgba(255, 255, 255, 0.1);
+  --c-line-strong: rgba(255, 255, 255, 0.18);
+
+  /* ── Text (warm off-white against cool navy) ──────────────── */
+  --c-text: #edeae4;
+  --c-text-muted: #a8b1c5;
+  --c-text-faint: #7b8499;
+
+  /* ── Accents ──────────────────────────────────────────────── */
+  --c-accent: #22d3ee;
+  --c-accent-2: #a78bfa;
+  --c-accent-3: #60a5fa;
+  --c-on-accent: #04121a;
+
+  /* ── Ambient stage: grid + light halos ────────────────────── */
+  --c-grid-line: rgba(126, 166, 224, 0.11);
+  --c-halo-1: rgba(34, 211, 238, 0.17);
+  --c-halo-2: rgba(167, 139, 250, 0.15);
+  --c-halo-3: rgba(96, 165, 250, 0.1);
+  --c-glow: rgba(34, 211, 238, 0.35);
+  --c-glow-2: rgba(167, 139, 250, 0.3);
+
+  /* ── Depth: layered shadows + light edges make the 3D read ── */
+  --sh-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --sh-2: 0 4px 12px -2px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --sh-3: 0 18px 40px -12px rgba(0, 0, 0, 0.7), 0 6px 14px -6px rgba(0, 0, 0, 0.5);
+  --sh-4: 0 40px 80px -24px rgba(0, 0, 0, 0.8), 0 12px 28px -12px rgba(0, 0, 0, 0.55);
+  --sh-edge: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --sh-ring: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --c-bg: #f6f7fb;
+  --c-bg-deep: #eaedf5;
+  --c-surface: #ffffff;
+  --c-raised: #ffffff;
+  --c-glass-1: rgba(255, 255, 255, 0.75);
+  --c-glass-2: rgba(255, 255, 255, 0.92);
+  --c-line: rgba(11, 17, 32, 0.1);
+  --c-line-strong: rgba(11, 17, 32, 0.2);
+
+  --c-text: #0b1120;
+  --c-text-muted: #46506a;
+  --c-text-faint: #5a6478;
+
+  /* Darkened so accent-on-white clears WCAG AA for normal text */
+  --c-accent: #0e7490;
+  --c-accent-2: #6d28d9;
+  --c-accent-3: #1d4ed8;
+  --c-on-accent: #ffffff;
+
+  --c-grid-line: rgba(20, 40, 90, 0.08);
+  --c-halo-1: rgba(14, 116, 144, 0.1);
+  --c-halo-2: rgba(109, 40, 217, 0.09);
+  --c-halo-3: rgba(29, 78, 216, 0.07);
+  --c-glow: rgba(14, 116, 144, 0.22);
+  --c-glow-2: rgba(109, 40, 217, 0.2);
+
+  --sh-1: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --sh-2: 0 4px 12px -2px rgba(16, 24, 40, 0.1), 0 1px 2px rgba(16, 24, 40, 0.06);
+  --sh-3: 0 18px 40px -12px rgba(16, 24, 40, 0.16), 0 6px 14px -6px rgba(16, 24, 40, 0.1);
+  --sh-4: 0 40px 80px -24px rgba(16, 24, 40, 0.2), 0 12px 28px -12px rgba(16, 24, 40, 0.12);
+  --sh-edge: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --sh-ring: inset 0 0 0 1px rgba(11, 17, 32, 0.04);
+}
+
+:root {
+  /* ── Type ─────────────────────────────────────────────────── */
+  --ff-display:
+    'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  --ff-sans:
+    'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    sans-serif;
+  --ff-mono:
+    'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+
+  /* ── Radii ────────────────────────────────────────────────── */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* ── Motion ───────────────────────────────────────────────── */
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 480ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-back: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+  /* ── 3D stage geometry ────────────────────────────────────── */
+  --persp: 1200px;
+  --tilt-max: 7deg;
+
+  /* ── Layout ───────────────────────────────────────────────── */
+  --shell: 1180px;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --header-h: 68px;
+}

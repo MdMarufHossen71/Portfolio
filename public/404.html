@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Redirecting…</title>
+
+    <!--
+      GitHub Pages SPA fallback — capturing half.
+
+      Pages has no rewrite rules. It serves this file, with a real 404 status, for
+      any path that is not a file on disk. So a deep link like /projects, or a
+      shared blog URL, never reaches index.html and the app never gets a chance to
+      route it.
+
+      This stashes the intended path and bounces to the app root. `restoreSpaRedirect()`
+      in src/lib/spaRedirect.ts picks it up before React Router reads the location,
+      so the correct route renders and the address bar ends up clean.
+
+      The base path is worked out from the hostname rather than hardcoded, because
+      the same file has to serve two deploy shapes:
+
+        mdmarufhossen71.github.io/Portfolio/about  → base "/Portfolio/", path "about"
+        mdmarufhossen.link/about                   → base "/",           path "about"
+
+      Only *.github.io needs the leading project segment stripped; on the custom
+      domain the site is at the root, so the whole path is the route.
+    -->
+    <script>
+      ;(function () {
+        // Pure string work — cannot throw, so `base` is always available below.
+        var onGithubPages = /\.github\.io$/i.test(location.hostname)
+        var segments = location.pathname.split('/').filter(Boolean)
+        var base = onGithubPages && segments.length > 0 ? '/' + segments[0] + '/' : '/'
+        var route = location.pathname.slice(base.length) + location.search + location.hash
+
+        try {
+          // Only stash something worth restoring. An empty route means the visitor
+          // asked for the root, which index.html already handles.
+          if (route && route !== '/') {
+            sessionStorage.setItem('spa:redirect', route)
+          }
+        } catch (e) {
+          // Storage blocked (private mode). The visitor still reaches the site;
+          // they land on the home page instead of the page they asked for.
+        }
+
+        location.replace(base)
+      })()
+    </script>
+
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        display: grid;
+        place-items: center;
+        background: #05070e;
+        color: #e8ecf6;
+        font:
+          15px/1.6 ui-sans-serif,
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+        text-align: center;
+        padding: 2rem;
+      }
+      a {
+        color: #38e1ff;
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      Visible only for the instant before the redirect, and permanently for anyone
+      with JavaScript disabled — which is why the <noscript> route out is a real
+      link and not a "please enable JavaScript" scold.
+
+      That link is absolute, and points at the canonical domain, because this file
+      is copied verbatim by Vite: it gets no base-path rewriting, and a bare "/"
+      would send a project-path visitor to the wrong site root. It is the one place
+      in public/ that repeats `siteUrl` from src/config/site.config.json.
+    -->
+    <div>
+      <p>Redirecting…</p>
+      <noscript>
+        <p>
+          This site needs JavaScript to route between pages.
+          <br />
+          <a href="https://mdmarufhossen.link/">Go to mdmarufhossen.link</a>
+        </p>
+      </noscript>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,111 @@
+# Builds the site and publishes it to GitHub Pages.
+#
+# ─── BEFORE THIS CAN DEPLOY ──────────────────────────────────────────────────
+# One manual step is required, once, by the repository owner:
+#
+#   Settings → Pages → Build and deployment → Source: **GitHub Actions**
+#
+# Until that is switched over, the `build` job here still runs on every push and
+# the `deploy` job fails with a permissions error. Nothing in this file changes
+# repository settings on its own.
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# ─── HOW THE BASE PATH IS DECIDED ────────────────────────────────────────────
+# A Vite SPA has to know its URL prefix at build time. There is exactly one knob,
+# `VITE_BASE_PATH`, and this workflow resolves it in this order:
+#
+#   1. Repository variable `PAGES_BASE_PATH`, if set (Settings → Secrets and
+#      variables → Actions → Variables). This overrides everything — use it to
+#      switch to "/" the moment the custom domain goes live.
+#   2. "/" when public/CNAME exists, because a custom domain serves from the root.
+#   3. "/<repo-name>/" otherwise — the default GitHub Pages project path.
+#
+# So the first deploy lands correctly on https://<user>.github.io/Portfolio/ with
+# no configuration at all, and switching to mdmarufhossen.link later is one file
+# (see deploy/README.md) or one variable.
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Lets the owner run a deploy by hand from the Actions tab.
+  workflow_dispatch:
+
+# Least privilege: read the repo, write a Pages deployment, and nothing else.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time. Not cancel-in-progress: cancelling a half-finished Pages
+# deployment can leave the live site in a mixed state.
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Resolve base path
+        id: base
+        env:
+          PAGES_BASE_PATH: ${{ vars.PAGES_BASE_PATH }}
+        run: |
+          if [ -n "$PAGES_BASE_PATH" ]; then
+            resolved="$PAGES_BASE_PATH"
+            reason="repository variable PAGES_BASE_PATH"
+          elif [ -f public/CNAME ]; then
+            resolved="/"
+            reason="public/CNAME is present (custom domain)"
+          else
+            resolved="/${GITHUB_REPOSITORY#*/}/"
+            reason="default GitHub Pages project path"
+          fi
+          echo "path=$resolved" >> "$GITHUB_OUTPUT"
+          echo "Base path: $resolved  ($reason)" >> "$GITHUB_STEP_SUMMARY"
+
+      # Formatting, lint and types. A broken build should fail here, loudly,
+      # rather than deploy something that only half works.
+      - name: Check
+        run: npm run check
+
+      - name: Build
+        env:
+          VITE_BASE_PATH: ${{ steps.base.outputs.path }}
+        run: npm run build
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
