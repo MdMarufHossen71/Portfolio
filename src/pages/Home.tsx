@@ -1,18 +1,19 @@
 import { ArrowRight, Gamepad2, Wrench } from 'lucide-react'
 import { Hero } from '../components/home/Hero'
 import { Stats } from '../components/home/Stats'
+import { Skills } from '../components/home/Skills'
+import { Services } from '../components/home/Services'
+import { Contact } from '../components/home/Contact'
+import { GalleryShowcase } from '../components/gallery/GalleryShowcase'
 import { PostCard } from '../components/cards/PostCard'
 import { ProjectCard } from '../components/cards/ProjectCard'
 import { ToolCategoryCard } from '../components/cards/ToolCategoryCard'
 import { Section } from '../components/ui/Section'
 import { ButtonLink } from '../components/ui/Button'
-import { TiltCard } from '../components/visuals/TiltCard'
-import { capabilities } from '../data/profile'
 import { featuredProjects } from '../data/projects'
 import { toolCategories, TOOL_CATEGORY_COUNT, TOOL_ENTRY_TOTAL } from '../data/tools'
 import { GAME_COUNT, GAME_GENRE_COUNT, featuredGames } from '../data/games'
 import { posts } from '../lib/blog'
-import { ACCENT_GRADIENT } from '../lib/accents'
 import { useSeo } from '../lib/seo'
 import type { AccentKey } from '../types/content'
 
@@ -31,39 +32,8 @@ export function Home() {
       <Hero />
       <Stats />
 
-      <Section
-        id="capabilities"
-        eyebrow="What I do"
-        title="Three kinds of work, one way of working"
-        intro="Design, marketing and web building overlap more than they look like they should. Each of these feeds the others."
-      >
-        <ul className="grid gap-5 md:grid-cols-3">
-          {capabilities.map((capability, index) => {
-            const Icon = capability.icon
-            const accent = ACCENTS[index % ACCENTS.length]
-            return (
-              <TiltCard key={capability.id} as="li" className="p-6" max={5} lift={6}>
-                <span
-                  aria-hidden="true"
-                  className="grid size-11 place-items-center rounded-[var(--r-sm)] text-[var(--c-on-accent)] shadow-[var(--sh-1)]"
-                  style={{ background: ACCENT_GRADIENT[accent] }}
-                >
-                  <Icon className="size-5" />
-                </span>
-                <h3 className="font-display layer-1 mt-4 text-lg font-semibold tracking-tight">
-                  {capability.title}
-                </h3>
-                <p className="text-muted mt-2 text-sm leading-relaxed">{capability.description}</p>
-                <ul className="text-faint mt-4 space-y-1.5 border-t border-[var(--c-line)] pt-3 text-xs">
-                  {capability.items.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </TiltCard>
-            )
-          })}
-        </ul>
-      </Section>
+      <Skills />
+      <Services />
 
       <Section
         id="featured-work"
@@ -83,6 +53,8 @@ export function Home() {
           ))}
         </ul>
       </Section>
+
+      <GalleryShowcase />
 
       <Section
         id="tools-preview"
@@ -149,6 +121,8 @@ export function Home() {
           </ul>
         </Section>
       ) : null}
+
+      <Contact />
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { Clock, Sparkles } from 'lucide-react'
+import { Clock, Sparkles, Star } from 'lucide-react'
 import { githubMark } from '../../data/brandMarks'
 import { ACCENT_GRADIENT, accentWash } from '../../lib/accents'
 import type { Project } from '../../types/content'
@@ -26,11 +26,13 @@ export function ProjectCard({ project }: { project: Project }) {
     role,
     year,
     tech,
+    category,
     repoUrl,
     liveUrl,
     liveUrlPending,
     accent,
     status,
+    featured,
     placeholder,
   } = project
 
@@ -47,6 +49,8 @@ export function ProjectCard({ project }: { project: Project }) {
       <div className="layer-1 flex flex-1 flex-col p-6">
         <div className="flex flex-wrap items-center gap-2">
           {placeholder ? <Badge icon={Sparkles}>Placeholder</Badge> : null}
+          {!placeholder && featured ? <Badge icon={Star}>Featured</Badge> : null}
+          {category ? <Badge>{category}</Badge> : null}
           {status ? <Badge>{status}</Badge> : null}
           {year ? <Badge icon={Clock}>{year}</Badge> : null}
         </div>

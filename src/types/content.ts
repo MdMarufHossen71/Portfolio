@@ -40,6 +40,9 @@ export interface SocialLink {
 
 export type AccentKey = 'cyan' | 'violet' | 'blue'
 
+/** Broad grouping for the project catalogue. Kept to values already in use. */
+export type ProjectCategory = 'Web' | 'Design' | 'Marketing' | 'Experiment'
+
 export interface Project {
   id: string
   title: string
@@ -48,6 +51,8 @@ export interface Project {
   /** Omit rather than guess — an unverified year is a fabricated fact. */
   year?: string
   tech: string[]
+  /** Broad grouping, for the category filter. Omit on stubs. */
+  category?: ProjectCategory
   /** Omit when there is no repository to link. */
   repoUrl?: string
   /** Omit when no live URL exists — the card then shows an honest pending state. */
@@ -124,4 +129,24 @@ export interface BlogPost extends BlogFrontmatter {
   /** Rendered HTML from the markdown body. */
   html: string
   readingMinutes: number
+}
+
+/** Visual showcase entry for design work. */
+export interface GalleryItem {
+  id: string
+  title: string
+  /** What the piece is, in one line — never a metric that cannot be backed up. */
+  description: string
+  category: string
+  /** Tools actually named by the owner, e.g. 'Adobe Illustrator'. */
+  tools: string[]
+  accent: AccentKey
+  /**
+   * Real artwork goes here when the owner supplies it. Until then the card
+   * renders a generated gradient tile, so the grid is never an empty box.
+   */
+  imageSrc?: string
+  imageAlt?: string
+  /** Set while the entry is still a stub waiting for real artwork. */
+  placeholder?: boolean
 }

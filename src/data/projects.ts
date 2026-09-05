@@ -28,6 +28,7 @@ export const projects: Project[] = [
     role: 'Designer & builder',
     year: TOOLS_GAMES_YEAR,
     tech: ['React', 'TypeScript', 'Vite', 'Wouter', 'Tailwind CSS', 'Browser storage', 'File APIs'],
+    category: 'Web',
     repoUrl: TOOLS_GAMES_REPO_URL,
     // Verified serving on 2026-08-22. Kept in external.ts so every "live demo"
     // affordance on the site switches together if that ever changes.
@@ -48,6 +49,7 @@ export const projects: Project[] = [
       '[Add project description — what the problem was, what you made, and what changed as a result. Two or three sentences is plenty.]',
     role: '[Add your role, e.g. Graphic designer]',
     tech: ['[Tool 1]', '[Tool 2]'],
+    category: 'Design',
     featured: false,
     accent: 'violet',
     placeholder: true,
@@ -59,6 +61,7 @@ export const projects: Project[] = [
       '[Add project description. Avoid metrics you cannot back up — describe the work itself instead.]',
     role: '[Add your role, e.g. Digital marketer]',
     tech: ['[Tool 1]', '[Tool 2]'],
+    category: 'Marketing',
     featured: false,
     accent: 'blue',
     placeholder: true,
@@ -66,6 +69,11 @@ export const projects: Project[] = [
 ]
 
 export const featuredProjects = projects.filter((p) => p.featured)
+
+/** Category filter options, derived from real (non-stub) projects first. */
+export const projectCategories = Array.from(
+  new Set(projects.flatMap((p) => (p.category ? [p.category] : []))),
+).sort((a, b) => a.localeCompare(b))
 
 /** Unique tech tags across real (non-stub) projects, for the filter row. */
 export const projectTechTags = Array.from(

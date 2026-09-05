@@ -1,7 +1,7 @@
 import { Menu, X } from 'lucide-react'
 import { useEffect, useId, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { site } from '../../config/site'
+import { mailto, site } from '../../config/site'
 import { navItems } from '../../data/nav'
 import { Monogram } from '../ui/Monogram'
 import { ThemeToggle } from './ThemeToggle'
@@ -21,6 +21,7 @@ import { ThemeToggle } from './ThemeToggle'
  */
 export function Header() {
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const panelId = useId()
   const triggerRef = useRef<HTMLButtonElement>(null)
   const { pathname } = useLocation()
@@ -60,8 +61,20 @@ export function Header() {
     }
   }, [open])
 
+  // Deepen the backdrop once the page moves, so the bar reads as a bar
+  // rather than a floating strip. Passive + rAF-batched by the browser.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    document.addEventListener('scroll', onScroll, { passive: true })
+    return () => document.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--c-line)] bg-[color-mix(in_oklab,var(--c-bg)_82%,transparent)] backdrop-blur-xl">
+    <header
+      data-scrolled={scrolled ? 'true' : 'false'}
+      className="sticky top-0 z-50 border-b backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-300 data-[scrolled=false]:border-[var(--c-line)] data-[scrolled=false]:bg-[color-mix(in_oklab,var(--c-bg)_82%,transparent)] data-[scrolled=true]:border-[var(--c-line-strong)] data-[scrolled=true]:bg-[color-mix(in_oklab,var(--c-bg)_94%,transparent)] data-[scrolled=true]:shadow-[var(--sh-2)]"
+    >
       <div className="shell flex h-[var(--header-h)] items-center justify-between gap-4">
         <Link to="/" className="group flex items-center gap-2.5" aria-label={`${site.name} — home`}>
           <Monogram size={34} />
@@ -91,12 +104,16 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
+          <a href={mailto} className="btn btn--primary hidden !px-4 !py-2 !text-sm sm:inline-flex">
+            Hire me
+          </a>
           <button
             ref={triggerRef}
             type="button"
             className="text-muted hover:text-ink grid size-10 place-items-center rounded-full border border-[var(--c-line)] bg-[var(--c-glass-1)] transition-colors md:hidden"
             aria-expanded={open}
             aria-controls={panelId}
+            aria-label={open ? 'Close menu' : 'Open menu'}
             onClick={() => setOpen((value) => !value)}
           >
             {open ? (
@@ -104,7 +121,6 @@ export function Header() {
             ) : (
               <Menu aria-hidden="true" className="size-[18px]" />
             )}
-            <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
           </button>
         </div>
       </div>
@@ -129,6 +145,9 @@ export function Header() {
                 {item.label}
               </NavLink>
             ))}
+            <a href={mailto} className="btn btn--primary mt-3 w-full">
+              Hire me
+            </a>
           </nav>
         </div>
       ) : null}

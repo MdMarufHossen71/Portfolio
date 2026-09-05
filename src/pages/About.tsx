@@ -111,11 +111,49 @@ export function About() {
       </Section>
 
       <Section
+        id="approach"
+        eyebrow="Approach"
+        title="How I work"
+        intro="Three habits that show up in everything I make, from a logo to a web page."
+      >
+        <ol className="grid gap-5 md:grid-cols-3">
+          {[
+            {
+              title: 'Start with the message',
+              text: 'Who it is for and what it should say — decided before any pixels move.',
+            },
+            {
+              title: 'Design for the smallest screen first',
+              text: 'If it stays readable as a phone thumbnail, it works everywhere else.',
+            },
+            {
+              title: 'Deliver files you can use',
+              text: 'Organised sources and exports, not a flat image you cannot edit.',
+            },
+          ].map((step, position) => (
+            <li key={step.title} className="panel p-6">
+              <p
+                aria-hidden="true"
+                className="font-display text-3xl font-semibold text-[var(--c-accent)] tabular-nums"
+              >
+                {position + 1}
+              </p>
+              <h3 className="font-display mt-3 text-base font-semibold tracking-tight">
+                {step.title}
+              </h3>
+              <p className="text-muted mt-2 text-sm leading-relaxed">{step.text}</p>
+            </li>
+          ))}
+        </ol>
+      </Section>
+
+      <Section
         id="elsewhere"
         eyebrow="Elsewhere"
         title="Find me online"
         intro="Every profile listed here is one I actually keep. Nothing is guessed from a username pattern."
       >
+        {' '}
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {socialLinks.map((link) => (
             <li key={link.id}>

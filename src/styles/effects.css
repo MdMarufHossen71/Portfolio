@@ -256,6 +256,153 @@
     color: var(--c-accent);
   }
 
+  /* ═══ Hero entrance ═════════════════════════════════════════
+     One-shot staggered fade/slide on first paint. Delays follow the DOM
+     order of the left column; the visual on the right joins near the end.
+     The global reduced-motion rule collapses this to ~instant, and the
+     block below makes the end state explicit so nothing can stick hidden. */
+  .hero-enter {
+    opacity: 0;
+    animation: hero-in var(--dur-slow) var(--ease) forwards;
+  }
+
+  .flex-col > .hero-enter:nth-child(1) {
+    animation-delay: 30ms;
+  }
+  .flex-col > .hero-enter:nth-child(2) {
+    animation-delay: 100ms;
+  }
+  .flex-col > .hero-enter:nth-child(3) {
+    animation-delay: 170ms;
+  }
+  .flex-col > .hero-enter:nth-child(4) {
+    animation-delay: 240ms;
+  }
+  .flex-col > .hero-enter:nth-child(5) {
+    animation-delay: 310ms;
+  }
+  .flex-col > .hero-enter:nth-child(6) {
+    animation-delay: 380ms;
+  }
+  .flex-col > .hero-enter:nth-child(7) {
+    animation-delay: 450ms;
+  }
+  .flex-col > .hero-enter:nth-child(8) {
+    animation-delay: 520ms;
+  }
+
+  section > .hero-enter {
+    animation-delay: 420ms;
+  }
+
+  /* ═══ Lightbox ═════════════════════════════════════════════
+     Fullscreen gallery preview. Fixed overlay above the sticky header
+     (see --z-overlay), panel reuses the glass treatment. */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-overlay);
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+  }
+
+  .lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in oklab, var(--c-bg-deep) 82%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    cursor: zoom-out;
+  }
+
+  .lightbox__panel {
+    position: relative;
+    width: 100%;
+    max-width: 56rem;
+    max-height: min(90dvh, 720px);
+    overflow: auto;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--c-line-strong);
+    background: var(--c-surface);
+    box-shadow: var(--sh-4), var(--sh-edge);
+  }
+
+  @media (min-width: 640px) {
+    .lightbox__panel {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+    }
+  }
+
+  .lightbox__art {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--c-bg-deep);
+  }
+
+  @media (min-width: 640px) {
+    .lightbox__art {
+      aspect-ratio: auto;
+      min-height: 100%;
+    }
+  }
+
+  .lightbox__art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .lightbox__tile {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    min-height: 240px;
+    font-family: var(--ff-display);
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--c-on-accent);
+    opacity: 0.92;
+  }
+
+  .lightbox__meta {
+    padding: 1.5rem;
+  }
+
+  .lightbox__controls {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .lightbox__btn {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--c-line-strong);
+    background: color-mix(in oklab, var(--c-bg) 78%, transparent);
+    color: var(--c-text);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition:
+      border-color var(--dur) var(--ease),
+      transform var(--dur-fast) var(--ease);
+  }
+
+  .lightbox__btn:hover {
+    border-color: var(--c-accent);
+  }
+
+  .lightbox__btn:active {
+    transform: translateY(1px);
+  }
+
   /* ═══ Scroll reveal ═══════════════════════════════════════════
      `useReveal` adds .is-in when an element scrolls into view, and adds it
      immediately under reduced motion or without IntersectionObserver, so
@@ -282,6 +429,16 @@
 }
 
 /* ═══ Keyframes ═════════════════════════════════════════════════ */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 @keyframes grid-drift {
   from {
     background-position:
@@ -334,5 +491,11 @@
   .stage__halo--a,
   .stage__halo--b {
     animation: none;
+  }
+
+  .hero-enter {
+    opacity: 1;
+    animation: none;
+    transform: none;
   }
 }

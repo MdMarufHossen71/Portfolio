@@ -26,7 +26,7 @@ function SocialIconLink({ link }: { link: SocialLink }) {
     <a
       href={link.url}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="me noopener noreferrer"
       title={link.label}
       className="text-muted hover:text-ink grid size-10 place-items-center rounded-full border border-[var(--c-line)] bg-[var(--c-glass-1)] transition-colors hover:border-[var(--c-accent)]"
     >
@@ -118,6 +118,9 @@ export function Footer() {
             © {year} {site.name}. Source released under the GNU GPL v3.
           </p>
           <p>Built with React, TypeScript and Tailwind CSS. No trackers, no cookies.</p>
+          <a href="#main" className="hover:text-ink underline-offset-4 hover:underline sm:ml-4">
+            Back to top
+          </a>
         </div>
       </div>
     </footer>

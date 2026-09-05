@@ -1,8 +1,10 @@
 import { ArrowRight, Mail, MapPin } from 'lucide-react'
 import { mailto, site } from '../../config/site'
-import { bioShort, toolkit } from '../../data/profile'
+import { bioShort } from '../../data/profile'
+import { primarySocialLinks } from '../../data/socialLinks'
 import { useTilt } from '../../lib/useTilt'
 import { ButtonAnchor, ButtonLink } from '../ui/Button'
+import { BrandIcon } from '../ui/BrandIcon'
 import { Monogram } from '../ui/Monogram'
 
 /**
@@ -49,7 +51,7 @@ function HeroCard() {
         <div className="layer-1 mt-7">
           <p className="text-faint mb-2 text-[0.6875rem] tracking-[0.14em] uppercase">Works in</p>
           <ul className="flex flex-wrap gap-1.5">
-            {toolkit.map((tool) => (
+            {['Adobe Illustrator', 'Canva', 'Vector design', 'Raster → vector'].map((tool) => (
               <li key={tool} className="chip text-[0.6875rem]">
                 {tool}
               </li>
@@ -72,36 +74,72 @@ export function Hero() {
   return (
     <section aria-labelledby="hero-heading" className="grid gap-14 py-16 lg:grid-cols-2 lg:py-24">
       <div className="flex flex-col justify-center">
-        <p className="eyebrow">{site.eyebrow}</p>
+        <p className="eyebrow hero-enter">Graphic Designer &amp; Digital Creator</p>
 
         <h1
           id="hero-heading"
-          className="mt-4 text-[clamp(2.5rem,7vw,4.5rem)] leading-[1.03] font-semibold tracking-tight"
+          className="hero-enter mt-4 text-[clamp(2.5rem,7vw,4.5rem)] leading-[1.03] font-semibold tracking-tight"
         >
           {site.name}
         </h1>
 
-        <p className="text-muted mt-5 max-w-xl text-lg leading-relaxed">{bioShort}</p>
-
-        <p className="text-faint mt-5 inline-flex items-center gap-2 text-sm">
-          <MapPin aria-hidden="true" className="size-4" />
-          {site.location}
+        <p className="hero-enter mt-5 max-w-xl text-lg leading-relaxed font-medium text-[var(--c-text)]">
+          I design logos, vectors and social visuals — and build fast websites to put them on.
         </p>
 
-        <div className="mt-9 flex flex-wrap items-center gap-3">
+        <p className="text-muted hero-enter mt-3 max-w-xl leading-relaxed">{bioShort}</p>
+
+        <ul aria-label="What I can help with" className="hero-enter mt-5 flex flex-wrap gap-1.5">
+          {[
+            'Graphic design',
+            'Vector design',
+            'Logo redrawing',
+            'Social visuals',
+            'Illustration',
+            'Web builds',
+            'Freelance work',
+          ].map((item) => (
+            <li key={item} className="chip">
+              {item}
+            </li>
+          ))}
+        </ul>
+
+        <p className="text-faint hero-enter mt-5 inline-flex items-center gap-2 text-sm">
+          <MapPin aria-hidden="true" className="size-4" />
+          {site.location} · Open for freelance
+        </p>
+
+        <div className="hero-enter mt-9 flex flex-wrap items-center gap-3">
           <ButtonLink to="/projects" variant="primary">
-            View projects
+            View my work
             <ArrowRight aria-hidden="true" className="size-4" />
           </ButtonLink>
-          <ButtonLink to="/tools">Explore the tools</ButtonLink>
-          <ButtonAnchor href={mailto} variant="quiet">
+          <ButtonAnchor href={mailto} variant="ghost">
             <Mail aria-hidden="true" className="size-4" />
-            Get in touch
+            Contact me
           </ButtonAnchor>
         </div>
+
+        <ul aria-label="Profiles" className="hero-enter mt-7 flex flex-wrap items-center gap-2">
+          {primarySocialLinks.map((link) => (
+            <li key={link.id}>
+              <a
+                href={link.url}
+                target="_blank"
+                rel="me noopener noreferrer"
+                title={link.label}
+                className="text-muted hover:text-ink grid size-10 place-items-center rounded-full border border-[var(--c-line)] bg-[var(--c-glass-1)] transition-colors hover:border-[var(--c-accent)]"
+              >
+                <BrandIcon mark={link.mark} glyph={link.glyph} />
+                <span className="sr-only">{link.label} (opens in a new tab)</span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <div className="flex items-center justify-center">
+      <div className="hero-enter flex items-center justify-center">
         <HeroCard />
       </div>
     </section>

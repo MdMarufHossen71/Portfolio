@@ -53,35 +53,3 @@ export function usePrefersReducedMotion(): boolean {
 export function useFinePointer(): boolean {
   return useMediaQuery('(pointer: fine)', false)
 }
-
-/**
- * True from the `md` breakpoint up.
- *
- * Used to pick a quality tier for the WebGL hero rather than to lay anything
- * out — layout stays in CSS, where it belongs. The pixel value matches Tailwind's
- * `md`, so the scene steps up at the same width the grid does.
- */
-export function useWideViewport(): boolean {
-  return useMediaQuery('(min-width: 768px)', true)
-}
-
-/**
- * True when the tab is visible.
- *
- * A hidden tab still runs `requestAnimationFrame` in some browsers, and a WebGL
- * loop that keeps drawing to a tab nobody is looking at is pure battery cost.
- */
-export function usePageVisible(): boolean {
-  const subscribe = useCallback((onStoreChange: () => void) => {
-    if (typeof document === 'undefined') return () => {}
-    document.addEventListener('visibilitychange', onStoreChange)
-    return () => document.removeEventListener('visibilitychange', onStoreChange)
-  }, [])
-
-  const getSnapshot = useCallback(() => {
-    if (typeof document === 'undefined') return true
-    return document.visibilityState !== 'hidden'
-  }, [])
-
-  return useSyncExternalStore(subscribe, getSnapshot, () => true)
-}

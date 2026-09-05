@@ -4,6 +4,7 @@ import { Button } from '../components/ui/Button'
 import { Chip } from '../components/ui/Chip'
 import { EmptyState } from '../components/ui/EmptyState'
 import { PageHeader } from '../components/ui/PageHeader'
+import { SearchInput } from '../components/ui/SearchInput'
 import { POST_COUNT, posts, postTags, postsWithTag } from '../lib/blog'
 import { useSeo } from '../lib/seo'
 
@@ -27,8 +28,21 @@ export function Blog() {
   })
 
   const [activeTag, setActiveTag] = useState<string | null>(null)
+  const [query, setQuery] = useState('')
 
-  const visible = useMemo(() => (activeTag === null ? posts : postsWithTag(activeTag)), [activeTag])
+  const visible = useMemo(() => {
+    const base = activeTag === null ? posts : postsWithTag(activeTag)
+    const normalised = query.trim().toLowerCase()
+    if (!normalised) return base
+    return base.filter(
+      (post) =>
+        post.title.toLowerCase().includes(normalised) ||
+        post.description.toLowerCase().includes(normalised) ||
+        post.tags.some((tag) => tag.toLowerCase().includes(normalised)),
+    )
+  }, [activeTag, query])
+
+  const filtersActive = activeTag !== null || query.trim() !== ''
 
   return (
     <>
@@ -46,8 +60,18 @@ export function Blog() {
           />
         ) : (
           <>
+            <div className="max-w-md">
+              <SearchInput
+                value={query}
+                onChange={setQuery}
+                label="Search posts by title, description or tag"
+                placeholder="Search posts…"
+                resultSummary={`${visible.length} of ${POST_COUNT} ${POST_COUNT === 1 ? 'post' : 'posts'} shown`}
+              />
+            </div>
+
             {postTags.length > 0 ? (
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="mt-5 flex flex-wrap items-center gap-2">
                 <span className="text-faint mr-1 text-xs tracking-[0.14em] uppercase">Topics</span>
                 {postTags.map((tag) => (
                   <Chip
@@ -68,29 +92,31 @@ export function Blog() {
               </div>
             ) : null}
 
-            <p aria-live="polite" className="text-faint mt-3 text-xs">
-              {visible.length} of {POST_COUNT} {POST_COUNT === 1 ? 'post' : 'posts'} shown
-            </p>
-
-            <div className="mt-8">
-              {visible.length > 0 ? (
-                <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {visible.map((post) => (
-                    <PostCard key={post.slug} post={post} />
-                  ))}
-                </ul>
-              ) : (
-                <EmptyState
-                  title="Nothing tagged that way yet"
-                  description="Pick another topic, or clear the filter to see everything."
-                  action={
-                    <Button variant="ghost" onClick={() => setActiveTag(null)}>
-                      Clear filter
-                    </Button>
-                  }
-                />
-              )}
-            </div>
+            {visible.length > 0 ? (
+              <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {visible.map((post) => (
+                  <PostCard key={post.slug} post={post} />
+                ))}
+              </ul>
+            ) : (
+              <EmptyState
+                title={
+                  filtersActive ? 'Nothing matches that search' : 'Nothing tagged that way yet'
+                }
+                description="Try different words, pick another topic, or clear the filters to see everything."
+                action={
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setActiveTag(null)
+                      setQuery('')
+                    }}
+                  >
+                    Clear filters
+                  </Button>
+                }
+              />
+            )}
           </>
         )}
       </div>

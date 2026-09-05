@@ -4,8 +4,8 @@ import { Chip } from '../components/ui/Chip'
 import { EmptyState } from '../components/ui/EmptyState'
 import { PageHeader } from '../components/ui/PageHeader'
 import { Button } from '../components/ui/Button'
-import { projects, projectTechTags } from '../data/projects'
-import { useSeo } from '../lib/seo'
+import { projects, projectCategories, projectTechTags } from '../data/projects'
+import { projectJsonLd, useJsonLd, useSeo } from '../lib/seo'
 
 /**
  * Projects.
@@ -25,19 +25,46 @@ export function Projects() {
     path: '/projects',
   })
 
+  // Structured data for real projects only — stubs describe nothing yet.
+  const realProjects = projects.filter((p) => !p.placeholder)
+  useJsonLd(
+    'projects-jsonld',
+    realProjects.map((p) =>
+      projectJsonLd({
+        title: p.title,
+        description: p.summary,
+        tech: p.tech,
+        url: p.liveUrl,
+        repoUrl: p.repoUrl,
+        year: p.year,
+      }),
+    ),
+  )
+
   const [activeTags, setActiveTags] = useState<string[]>([])
+  const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
   const visible = useMemo(() => {
-    if (activeTags.length === 0) return projects
-    // Every selected tag must be present, so stacking filters narrows results.
-    return projects.filter((project) => activeTags.every((tag) => project.tech.includes(tag)))
-  }, [activeTags])
+    return projects.filter((project) => {
+      // Every selected tag must be present, so stacking filters narrows results.
+      const matchesTags =
+        activeTags.length === 0 || activeTags.every((tag) => project.tech.includes(tag))
+      const matchesCategory = activeCategory === null || project.category === activeCategory
+      return matchesTags && matchesCategory
+    })
+  }, [activeTags, activeCategory])
 
   const toggleTag = (tag: string) => {
     setActiveTags((current) =>
       current.includes(tag) ? current.filter((item) => item !== tag) : [...current, tag],
     )
   }
+
+  const clearAll = () => {
+    setActiveTags([])
+    setActiveCategory(null)
+  }
+  const filtersActive = activeTags.length > 0 || activeCategory !== null
 
   return (
     <>
@@ -48,7 +75,26 @@ export function Projects() {
       />
 
       <div className="py-10">
-        <div className="flex flex-wrap items-center gap-2">
+        {projectCategories.length > 0 ? (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-faint mr-1 text-xs tracking-[0.14em] uppercase">Category</span>
+            {projectCategories.map((category) => (
+              <Chip
+                key={category}
+                label={category}
+                count={projects.filter((p) => p.category === category).length}
+                active={activeCategory === category}
+                // Single-select: categories are broad buckets, and stacking two
+                // of them across a small catalogue would only empty the list.
+                onToggle={() =>
+                  setActiveCategory((current) => (current === category ? null : category))
+                }
+              />
+            ))}
+          </div>
+        ) : null}
+
+        <div className="mt-4 flex flex-wrap items-center gap-2">
           <span className="text-faint mr-1 text-xs tracking-[0.14em] uppercase">Built with</span>
           {projectTechTags.map((tag) => (
             <Chip
@@ -58,8 +104,8 @@ export function Projects() {
               onToggle={() => toggleTag(tag)}
             />
           ))}
-          {activeTags.length > 0 ? (
-            <Button variant="quiet" onClick={() => setActiveTags([])}>
+          {filtersActive ? (
+            <Button variant="quiet" onClick={clearAll}>
               Clear
             </Button>
           ) : null}
@@ -79,9 +125,9 @@ export function Projects() {
           ) : (
             <EmptyState
               title="No projects match those filters"
-              description="Try removing a tag — the filters narrow results rather than widening them."
+              description="Try removing a tag or category — the filters narrow results rather than widening them."
               action={
-                <Button variant="ghost" onClick={() => setActiveTags([])}>
+                <Button variant="ghost" onClick={clearAll}>
                   Clear filters
                 </Button>
               }

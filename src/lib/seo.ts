@@ -215,6 +215,34 @@ export function articleJsonLd(input: {
 }
 
 /**
+ * Structured data for a real (non-placeholder) project.
+ *
+ * Only honest fields: nothing here claims users, revenue or awards. Omit the
+ * entry entirely rather than filling a field with a guess.
+ */
+export function projectJsonLd(input: {
+  title: string
+  description: string
+  tech: string[]
+  url?: string
+  repoUrl?: string
+  year?: string
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: input.title,
+    description: input.description,
+    author: { '@type': 'Person', name: site.name, url: absoluteUrl('/') },
+    ...(input.url ? { url: input.url } : {}),
+    ...(input.repoUrl ? { codeRepository: input.repoUrl } : {}),
+    ...(input.year ? { dateCreated: input.year } : {}),
+    keywords: input.tech.join(', '),
+    inLanguage: 'en',
+  }
+}
+
+/**
  * Prefixes a path with the deploy base path, for assets referenced from JS.
  * Router links must NOT use this — the router already applies its basename.
  */

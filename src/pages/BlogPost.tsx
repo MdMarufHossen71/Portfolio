@@ -1,5 +1,8 @@
 import { ArrowLeft, ArrowRight, Clock } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
+import { useMemo } from 'react'
+import { ShareButtons } from '../components/blog/ShareButtons'
+import { PostCard } from '../components/cards/PostCard'
 import { Badge } from '../components/ui/Badge'
 import { ButtonLink } from '../components/ui/Button'
 import { formatDate } from '../lib/format'
@@ -53,6 +56,17 @@ function PostBody({ post, newer, older }: { post: Post; newer: Post | null; olde
     }),
   )
 
+  // Related by shared tags, newest first — never the post itself.
+  const related = useMemo(
+    () =>
+      posts
+        .filter(
+          (item) => item.slug !== post.slug && item.tags.some((tag) => post.tags.includes(tag)),
+        )
+        .slice(0, 3),
+    [post],
+  )
+
   return (
     <article className="py-12 sm:py-16">
       <Link
@@ -103,6 +117,29 @@ function PostBody({ post, newer, older }: { post: Post; newer: Post | null; olde
 
       {/* Rendered from markdown at build time — see the note at the top of this file. */}
       <div className="prose mt-12" dangerouslySetInnerHTML={{ __html: post.html }} />
+
+      <p className="text-faint mt-10 text-sm">
+        Written by {post.starter ? 'the site owner (starter draft)' : 'Md Maruf Hossen'} ·{' '}
+        <time dateTime={post.date}>{formatDate(post.date)}</time> · {post.readingMinutes} min read
+      </p>
+
+      <ShareButtons title={post.title} path={`/blog/${post.slug}`} description={post.description} />
+
+      {related.length > 0 ? (
+        <section aria-labelledby="related-posts-heading" className="mt-16">
+          <h2
+            id="related-posts-heading"
+            className="font-display text-2xl font-semibold tracking-tight"
+          >
+            Related posts
+          </h2>
+          <ul className="mt-6 grid gap-6 md:grid-cols-2">
+            {related.map((item) => (
+              <PostCard key={item.slug} post={item} />
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {newer || older ? (
         <nav
