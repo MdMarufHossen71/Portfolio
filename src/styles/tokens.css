@@ -8,7 +8,22 @@
  * silently resolve to nothing.
  *
  * Themes swap these values at runtime via [data-theme] on <html>, so every
- * surface, shadow and glow re-tints from one place.
+ * surface, shadow and glow re-tints from one place — including the WebGL hero,
+ * which reads --c-field-* off the document rather than hardcoding hex in GLSL.
+ *
+ * ── Light source ────────────────────────────────────────────────
+ * ONE light for the whole site: warm white, from the TOP-LEFT. Every shadow
+ * therefore falls down-and-right (positive x and y offsets) and every highlight
+ * edge sits on the top-left face. The 3D hero's key light matches. Mixed light
+ * directions are the fastest way to make a dimensional design look fake, so this
+ * is the rule that everything else follows.
+ *
+ * ── Palette ─────────────────────────────────────────────────────
+ * Ink base, warm gold primary, jade support, ember for a third channel. Chosen
+ * against the cyan/violet/blue default this file used to carry: that particular
+ * gradient is the most overused look on the web right now, and it said nothing
+ * about a designer working out of Gazipur. Gold-on-ink reads like a plotting
+ * screen, which is the point — the hero draws a real function.
  */
 
 :root,
@@ -16,78 +31,94 @@
   color-scheme: dark;
 
   /* ── Surfaces ─────────────────────────────────────────────── */
-  --c-bg: #05070e;
-  --c-bg-deep: #03040a;
-  --c-surface: #0a0f1c;
-  --c-raised: #101828;
-  --c-glass-1: rgba(255, 255, 255, 0.03);
-  --c-glass-2: rgba(255, 255, 255, 0.055);
-  --c-line: rgba(255, 255, 255, 0.1);
-  --c-line-strong: rgba(255, 255, 255, 0.18);
+  --c-bg: #06080b;
+  --c-bg-deep: #030406;
+  --c-surface: #0b0f14;
+  --c-raised: #12171e;
+  --c-glass-1: rgba(255, 250, 240, 0.03);
+  --c-glass-2: rgba(255, 250, 240, 0.06);
+  --c-line: rgba(255, 245, 225, 0.1);
+  --c-line-strong: rgba(255, 245, 225, 0.2);
 
-  /* ── Text (warm off-white against cool navy) ──────────────── */
-  --c-text: #edeae4;
-  --c-text-muted: #a8b1c5;
-  --c-text-faint: #7b8499;
+  /* ── Text (warm off-white against neutral ink) ────────────── */
+  --c-text: #f2ede4;
+  --c-text-muted: #aaa49a;
+  --c-text-faint: #837d73;
 
   /* ── Accents ──────────────────────────────────────────────── */
-  --c-accent: #22d3ee;
-  --c-accent-2: #a78bfa;
-  --c-accent-3: #60a5fa;
-  --c-on-accent: #04121a;
+  --c-accent: #f0b558;
+  --c-accent-2: #3ecfa4;
+  --c-accent-3: #f2825c;
+  --c-on-accent: #1a1206;
 
   /* ── Ambient stage: grid + light halos ────────────────────── */
-  --c-grid-line: rgba(126, 166, 224, 0.11);
-  --c-halo-1: rgba(34, 211, 238, 0.17);
-  --c-halo-2: rgba(167, 139, 250, 0.15);
-  --c-halo-3: rgba(96, 165, 250, 0.1);
-  --c-glow: rgba(34, 211, 238, 0.35);
-  --c-glow-2: rgba(167, 139, 250, 0.3);
+  --c-grid-line: rgba(226, 208, 172, 0.09);
+  --c-halo-1: rgba(240, 181, 88, 0.15);
+  --c-halo-2: rgba(62, 207, 164, 0.1);
+  --c-halo-3: rgba(242, 130, 92, 0.07);
+  --c-glow: rgba(240, 181, 88, 0.32);
+  --c-glow-2: rgba(62, 207, 164, 0.26);
 
-  /* ── Depth: layered shadows + light edges make the 3D read ── */
-  --sh-1: 0 1px 2px rgba(0, 0, 0, 0.5);
-  --sh-2: 0 4px 12px -2px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.4);
-  --sh-3: 0 18px 40px -12px rgba(0, 0, 0, 0.7), 0 6px 14px -6px rgba(0, 0, 0, 0.5);
-  --sh-4: 0 40px 80px -24px rgba(0, 0, 0, 0.8), 0 12px 28px -12px rgba(0, 0, 0, 0.55);
-  --sh-edge: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --sh-ring: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  /* ── WebGL hero: read by the shader, not written in GLSL ──── */
+  --c-field-low: #2f6f66;
+  --c-field-high: #ffd28a;
+  --c-field-line: #f0b558;
+  --c-field-alpha: 0.9;
+  --c-field-blend: additive;
+
+  /* ── Depth: layered shadows + light edges make the 3D read ──
+     Offsets are down-and-right because the light is top-left. */
+  --sh-1: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  --sh-2: 2px 4px 12px -2px rgba(0, 0, 0, 0.55), 1px 1px 2px rgba(0, 0, 0, 0.4);
+  --sh-3: 6px 18px 40px -12px rgba(0, 0, 0, 0.7), 2px 6px 14px -6px rgba(0, 0, 0, 0.5);
+  --sh-4: 12px 40px 80px -24px rgba(0, 0, 0, 0.8), 4px 12px 28px -12px rgba(0, 0, 0, 0.55);
+  --sh-edge: inset 1px 1px 0 rgba(255, 240, 214, 0.09);
+  --sh-ring: inset 0 0 0 1px rgba(255, 240, 214, 0.06);
 }
 
 [data-theme='light'] {
   color-scheme: light;
 
-  --c-bg: #f6f7fb;
-  --c-bg-deep: #eaedf5;
+  --c-bg: #f7f5f1;
+  --c-bg-deep: #eeeae3;
   --c-surface: #ffffff;
   --c-raised: #ffffff;
-  --c-glass-1: rgba(255, 255, 255, 0.75);
+  --c-glass-1: rgba(255, 255, 255, 0.72);
   --c-glass-2: rgba(255, 255, 255, 0.92);
-  --c-line: rgba(11, 17, 32, 0.1);
-  --c-line-strong: rgba(11, 17, 32, 0.2);
+  --c-line: rgba(32, 26, 16, 0.1);
+  --c-line-strong: rgba(32, 26, 16, 0.2);
 
-  --c-text: #0b1120;
-  --c-text-muted: #46506a;
-  --c-text-faint: #5a6478;
+  --c-text: #15120d;
+  --c-text-muted: #4e4941;
+  --c-text-faint: #635c52;
 
-  /* Darkened so accent-on-white clears WCAG AA for normal text */
-  --c-accent: #0e7490;
-  --c-accent-2: #6d28d9;
-  --c-accent-3: #1d4ed8;
-  --c-on-accent: #ffffff;
+  /* Darkened so accent-on-paper clears WCAG AA for normal text */
+  --c-accent: #8a5a12;
+  --c-accent-2: #0f6f56;
+  --c-accent-3: #a8442a;
+  --c-on-accent: #fffdf8;
 
-  --c-grid-line: rgba(20, 40, 90, 0.08);
-  --c-halo-1: rgba(14, 116, 144, 0.1);
-  --c-halo-2: rgba(109, 40, 217, 0.09);
-  --c-halo-3: rgba(29, 78, 216, 0.07);
-  --c-glow: rgba(14, 116, 144, 0.22);
-  --c-glow-2: rgba(109, 40, 217, 0.2);
+  --c-grid-line: rgba(60, 44, 18, 0.08);
+  --c-halo-1: rgba(138, 90, 18, 0.1);
+  --c-halo-2: rgba(15, 111, 86, 0.08);
+  --c-halo-3: rgba(168, 68, 42, 0.06);
+  --c-glow: rgba(138, 90, 18, 0.2);
+  --c-glow-2: rgba(15, 111, 86, 0.18);
 
-  --sh-1: 0 1px 2px rgba(16, 24, 40, 0.06);
-  --sh-2: 0 4px 12px -2px rgba(16, 24, 40, 0.1), 0 1px 2px rgba(16, 24, 40, 0.06);
-  --sh-3: 0 18px 40px -12px rgba(16, 24, 40, 0.16), 0 6px 14px -6px rgba(16, 24, 40, 0.1);
-  --sh-4: 0 40px 80px -24px rgba(16, 24, 40, 0.2), 0 12px 28px -12px rgba(16, 24, 40, 0.12);
-  --sh-edge: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  --sh-ring: inset 0 0 0 1px rgba(11, 17, 32, 0.04);
+  /* Additive blending needs darker source colours on paper, or the field
+     washes out to white. These are deliberately not the accent tokens. */
+  --c-field-low: #3f6a52;
+  --c-field-high: #8a5a12;
+  --c-field-line: #6d4a12;
+  --c-field-alpha: 0.55;
+  --c-field-blend: normal;
+
+  --sh-1: 1px 1px 2px rgba(38, 30, 18, 0.07);
+  --sh-2: 2px 4px 12px -2px rgba(38, 30, 18, 0.1), 1px 1px 2px rgba(38, 30, 18, 0.06);
+  --sh-3: 6px 18px 40px -12px rgba(38, 30, 18, 0.16), 2px 6px 14px -6px rgba(38, 30, 18, 0.1);
+  --sh-4: 12px 40px 80px -24px rgba(38, 30, 18, 0.2), 4px 12px 28px -12px rgba(38, 30, 18, 0.12);
+  --sh-edge: inset 1px 1px 0 rgba(255, 255, 255, 0.9);
+  --sh-ring: inset 0 0 0 1px rgba(32, 26, 16, 0.04);
 }
 
 :root {
